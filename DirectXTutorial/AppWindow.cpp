@@ -4,6 +4,7 @@
 #include "Matrix4x4.h"
 #include "InputSystem.h"
 #include "EngineTime.h"
+#include "CameraSystem.h"
 
 #include "Cube.h"
 #include "Quad.h"
@@ -11,7 +12,6 @@
 #include "Plane.h"
 
 #include "Debugger.h"
-#include <iostream>
 
 
 AppWindow::AppWindow(){}
@@ -30,7 +30,8 @@ void AppWindow::onCreate()
 
 	
 	// SCENE CAMERA
-	m_Camera = new Camera(&m_windowWidth, &m_windowHeight);
+	CameraSystem::init();
+	CameraSystem::createCamera(m_windowWidth, m_windowHeight);
 
 	//testCreate();
 	
@@ -41,66 +42,6 @@ void AppWindow::onCreate()
 
 	m_shapes.push_back(plane);
 
-
-	Vector3D spawnPositions[] = {
-		Vector3D(-1, 1, 0),
-		Vector3D(0, 1, 0),
-		Vector3D(1, 1, 0),
-		Vector3D(-0.5f, 3, 0),
-		Vector3D(0.5f, 3, 0),
-		Vector3D(0, 5, 0),
-	};
-
-
-	Vector3D offset = Vector3D(0.5f,0,0);
-	float angle = 76 * 0.0174533;
-
-	//TRIANGLES
-	for (int i = 0; i < sizeof(spawnPositions)/sizeof(Vector3D); i++) {
-		Primitive* leftplane = new Plane();
-		leftplane->initialize();
-
-		leftplane->getTransform()->move(spawnPositions[i]);
-		leftplane->getTransform()->scale(Vector3D(0,0, -0.5f));
-		leftplane->getTransform()->rotate(Vector3D(0,0, angle));
-
-		m_shapes.push_back(leftplane);
-
-		Primitive* rightPlane = new Plane();
-		rightPlane->initialize();
-
-		rightPlane->getTransform()->move(spawnPositions[i] + offset);
-		rightPlane->getTransform()->scale(Vector3D(0, 0,- 0.5f));
-		rightPlane->getTransform()->rotate(Vector3D(0, 0, -angle));
-
-		m_shapes.push_back(rightPlane);
-	}
-	
-	Vector3D basePositions[] = {
-		Vector3D(-0.5f, 2.01f, 0),
-		Vector3D(1, 2, 0),
-		Vector3D(0.25f, 4, 0)
-	};
-
-	for (int i = 0; i < sizeof(basePositions)/sizeof(Vector3D); i++)
-	{
-		Primitive* baseplane = new Plane();
-		baseplane->initialize();
-		baseplane->getTransform()->move(basePositions[i]);
-		baseplane->getTransform()->scale(Vector3D(0, 0, -0.5f));
-
-		m_shapes.push_back(baseplane);
-	}
-
-
-
-
-	for (int i = 1; i < m_shapes.size(); i++) {
-		std::cout << i << std::endl;
-		std::cout << "Pos  :"; Debugger::PrintVector(m_shapes[i]->getTransform()->m_pos);
-		std::cout << "Scale:"; Debugger::PrintVector(m_shapes[i]->getTransform()->m_scale);
-		std::cout << "Rot:"; Debugger::PrintVector(m_shapes[i]->getTransform()->m_rot);
-	}
 
 
 	//CONSTANT BUFFER
@@ -114,21 +55,18 @@ void AppWindow::onCreate()
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
+
+	CameraSystem::update();
 	InputSystem::get()->update();
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0.2, 0.2, 0.2, 1); //BLACK
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(m_windowWidth, m_windowHeight);
 
-	// Update the camera
-	m_Camera->update();
 
 	for (int i = 0; i < m_shapes.size(); i++) {
-		// Calc the circle's matrices
-		m_shapes[i]->updateMatrix(m_Camera->getView(), m_Camera->getProj());
-
-		// Move the cube based on its position on screen space
 		m_shapes[i]->update();
+		m_shapes[i]->updateMVP();
 		m_shapes[i]->draw();
 	}
 
@@ -141,14 +79,14 @@ void AppWindow::onUpdate()
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
-	
+
 	while (m_shapes.size() > 0) {
 		delete m_shapes.back();
 		m_shapes.pop_back();
 	}
+
+	CameraSystem::release();
 }
-
-
 
 
 void AppWindow::InstantiateShape()
@@ -163,6 +101,8 @@ void AppWindow::InstantiateShape()
 
 	m_shapes.push_back(newShape);
 }
+
+#pragma region PARDCODE17_Test_Textures
 
 
 void AppWindow::testCreate()
@@ -295,8 +235,8 @@ void AppWindow::testUpdate()
 	temp.setRotationY(0);
 	world_cam *= temp;
 
-	cc.m_view = m_Camera->getView();
-	cc.m_proj = m_Camera->getProj();
+	cc.m_view = CameraSystem::getCamera()->getView();
+	cc.m_proj = CameraSystem::getCamera()->getProj();
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 }
 
@@ -314,16 +254,19 @@ void AppWindow::testDraw()
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 }
+#pragma endregion
 
 
 
 void AppWindow::onFocus()
 {
+	Window::onFocus();
 	InputSystem::get()->addListener(this);
 }
 
 void AppWindow::onKillFocus()
 {
+	Window::onKillFocus();
 	InputSystem::get()->removeListener(this);
 }
 

@@ -9,7 +9,7 @@
 
 Cube::Cube() : Primitive()
 {
-	//m_Components.push_back(new RotatorScript(this));
+	m_Components.push_back(new RotatorScript(this));
 	//m_Components.push_back(new ScaleScript(this));
 
 

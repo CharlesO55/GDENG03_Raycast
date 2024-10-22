@@ -29,7 +29,6 @@ public:
 
 
 private:
-	Camera* m_Camera = nullptr;
 	std::vector<Primitive*> m_shapes = {};
 
 	

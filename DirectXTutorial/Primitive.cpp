@@ -3,6 +3,7 @@
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
 
+#include "CameraSystem.h"
 
 Primitive::Primitive() : SceneObject() {}
 
@@ -43,49 +44,24 @@ void Primitive::update()
 	}
 }
 
-void Primitive::updateMatrix(Matrix4x4 cameraView, Matrix4x4 cameraProj, Matrix4x4* worldOverride)
+void Primitive::updateMVP(Matrix4x4* worldOverride)
 {
-	/*Matrix4x4 temp;
-
-	m_cc.m_world.setIdentity();
-	m_cc.m_world.setScale(m_scale);
-
-	temp.setIdentity();
-	temp.setRotationZ(m_rot.z);
-	m_cc.m_world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationY(m_rot.y);
-	m_cc.m_world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationX(m_rot.x);
-	m_cc.m_world *= temp;
-
-	temp.setIdentity();
-	temp.setTranslation(m_pos);
-	m_cc.m_world *= temp;*/
-	// Calc local transforms... ^
-
-	m_cc.m_world = getTransform()->m_transformation;
+	m_cc.m_world = getTransform()->getWorldMatrix();
 
 	// Apply parent transform
 	if (worldOverride != nullptr) {
 		m_cc.m_world *= *worldOverride;
 	}
 
-
-	//CUT
-
 	// UPDATES FROM CAMERA MATRICES
-	m_cc.m_view = cameraView;
-	m_cc.m_proj = cameraProj;
+	m_cc.m_view = CameraSystem::getCamera()->getView();
+	m_cc.m_proj = CameraSystem::getCamera()->getProj();
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &m_cc);
 
 	// Recursive call for child to apply my transform as its parent.
 	if (this->m_child != nullptr)
-		((Primitive*)m_child)->updateMatrix(cameraView, cameraProj, &m_cc.m_world);
+		((Primitive*)m_child)->updateMVP(&m_cc.m_world);
 }
 
 void Primitive::draw()

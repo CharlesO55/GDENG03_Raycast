@@ -22,7 +22,7 @@ public:
 	void initialize();
 	virtual void update();
 
-	void updateMatrix(Matrix4x4 cameraView, Matrix4x4 cameraProj, Matrix4x4* worldOverride = nullptr);
+	void updateMVP(Matrix4x4* worldOverride = nullptr);
 	void draw();
 	void release();
 

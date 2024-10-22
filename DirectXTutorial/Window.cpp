@@ -52,27 +52,27 @@ Window::Window()
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hInstance = NULL;
-	wc.lpszClassName = L"MyWindowClass";
+	wc.lpszClassName = L"WindowClass";
 	wc.lpszMenuName = L"";
 	wc.style = NULL;
 	wc.lpfnWndProc = &WndProc;
 
 	if (!::RegisterClassEx(&wc))
-		Debugger::Error("[CREATE ERROR] Window");
+		Debugger::Error("[Window] Create");
 
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX Tutorial",
+	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"WindowClass", L"GDENG03_Raycast",
 		WS_CAPTION | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
 		NULL, NULL, NULL, NULL);
 
 	if (!m_hwnd)
-		Debugger::Error("[CREATE ERROR] Window");
+		Debugger::Error("[Window] Create");
 
 
 	::ShowWindow(m_hwnd, SW_SHOW);
 	::UpdateWindow(m_hwnd);
 
-
 	m_is_run = true;
+	Debugger::Success("[Window] Created");
 }
 
 Window::~Window()
@@ -132,6 +132,7 @@ void Window::onCreate()
 void Window::onDestroy()
 {
 	m_is_run = false;
+	Debugger::Warning("[Window] Destroyed");
 }
 
 void Window::onFocus()
@@ -140,14 +141,14 @@ void Window::onFocus()
 
 void Window::onKillFocus()
 {
+	// VALUE USED BY CAMERA FOR SCREEN SIZE
+	CalcWindowRect();
 }
 
 
 
 void Window::onUpdate()
 {
-	// VALUE USED BY CAMERA FOR SCREEN SIZE
-    CalcWindowRect();
 }
 
 void Window::CalcWindowRect()

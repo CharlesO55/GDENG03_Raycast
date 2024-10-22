@@ -5,10 +5,10 @@
 #include "InputListener.h"
 #include "SceneObject.h"
 
-class Camera : public InputListener, public SceneObject
+class Camera : public InputListener
 {
 public:
-	Camera(int* refWindowWidth, int* refWindowHeight);
+	Camera(const int& refWindowWidth, const int& refWindowHeight);
 	~Camera();
 
 	void setActive(bool active);
@@ -22,9 +22,10 @@ private:
 	Matrix4x4 m_view;
 	Matrix4x4 m_proj;
 
+	Matrix4x4 m_inversedView;
 
-	int* ref_windowWidth = nullptr;
-	int* ref_windowHeight = nullptr;
+	const int& ref_windowWidth;
+	const int& ref_windowHeight;
 	
 
 	//DIRECTIONAL MOVEMENT

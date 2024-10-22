@@ -162,6 +162,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>GameEngine\CameraSystem</Filter>
     </ClCompile>
+    <ClCompile Include="CameraSystem.cpp">
+      <Filter>GameEngine\CameraSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -279,6 +282,9 @@
       <Filter>GameEngine\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>GameEngine\CameraSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSystem.h">
       <Filter>GameEngine\CameraSystem</Filter>
     </ClInclude>
   </ItemGroup>
