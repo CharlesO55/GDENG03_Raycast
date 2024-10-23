@@ -39,11 +39,6 @@ Circle::Circle() : Primitive()
 	moveDir.y = std::rand() % 2 ? randDir.y * -1 : randDir.y;
 }
 
-Circle::~Circle()
-{
-	release();
-}
-
 void Circle::update()
 {
 	Primitive::update();

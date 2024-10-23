@@ -10,6 +10,7 @@
 #include "Quad.h"
 #include "Circle.h"
 #include "Plane.h"
+#include "Line.h"
 
 #include "Debugger.h"
 
@@ -44,6 +45,8 @@ void AppWindow::onCreate()
 
 
 
+	
+
 	//CONSTANT BUFFER
 	constant cc;
 	cc.m_time = 0;
@@ -56,7 +59,6 @@ void AppWindow::onUpdate()
 {
 	Window::onUpdate();
 
-	CameraSystem::update();
 	InputSystem::get()->update();
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
@@ -68,6 +70,12 @@ void AppWindow::onUpdate()
 		m_shapes[i]->update();
 		m_shapes[i]->updateMVP();
 		m_shapes[i]->draw();
+	}
+
+	if (m_shapes.size() > 2) {
+		Debugger::PrintVector(m_shapes[2]->getTransform()->getRotation());
+		Debugger::PrintVector(m_shapes[2]->getTransform()->getWorldMatrix().getEulerAngles());
+
 	}
 
 	//testUpdate();
@@ -104,6 +112,14 @@ void AppWindow::InstantiateShape()
 
 #pragma region PARDCODE17_Test_Textures
 
+
+void AppWindow::DrawRaycastLine()
+{
+	// CREATE A LINE
+	Line* line = new Line(Vector3D(0), CameraSystem::getCamera()->getTransform()->getPosition());
+	line->initialize();
+	m_shapes.push_back(line);
+}
 
 void AppWindow::testCreate()
 {
@@ -274,22 +290,22 @@ void AppWindow::onKillFocus()
 void AppWindow::onKeyDown(int key)
 {
 	switch (key) {
-		//ESCAPE
+	//ESCAPE
 	case 27:
 		this->onDestroy();
 		break;
-		//SPACE
+	//SPACE
 	case 32:
 		InstantiateShape();
 		break;
-		//BACKSPACE
+	//BACKSPACE
 	case 8:
 		if (m_shapes.size() > 0) {
 			delete m_shapes.back();
 			m_shapes.pop_back();
 		}
 		break;
-		//DELETE
+	//DELETE
 	case 46:
 		while (m_shapes.size() > 0) {
 			delete m_shapes.back();
@@ -299,7 +315,14 @@ void AppWindow::onKeyDown(int key)
 	}
 }
 
-void AppWindow::onKeyUp(int key){}
+void AppWindow::onKeyUp(int key){
+	switch (key) {
+	//TAB
+	case 9:
+		this->DrawRaycastLine();
+		break;
+	}
+}
 
 void AppWindow::onMouseMove(const Point& mouse_pos)
 {

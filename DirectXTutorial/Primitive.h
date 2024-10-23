@@ -23,7 +23,7 @@ public:
 	virtual void update();
 
 	void updateMVP(Matrix4x4* worldOverride = nullptr);
-	void draw();
+	virtual void draw();
 	void release();
 
 

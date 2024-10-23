@@ -96,8 +96,3 @@ Cube::Cube(Vector3D color)
 		1,0,7
 	};
 }
-
-Cube::~Cube()
-{
-	release();
-}

@@ -17,13 +17,13 @@ public:
 		return v;
 	}
 
-	Vector3D operator *(const float num)
+	Vector3D operator *(const float num) const
 	{
 		return Vector3D(x * num, y * num, z * num);
 	}
 
 
-	Vector3D operator +(const Vector3D& vec)
+	Vector3D operator +(const Vector3D& vec) const
 	{
 		return Vector3D(x + vec.x, y + vec.y, z + vec.z);
 	}

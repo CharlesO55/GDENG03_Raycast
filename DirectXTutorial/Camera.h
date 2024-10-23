@@ -5,7 +5,7 @@
 #include "InputListener.h"
 #include "SceneObject.h"
 
-class Camera : public InputListener
+class Camera : public InputListener, public SceneObject
 {
 public:
 	Camera(const int& refWindowWidth, const int& refWindowHeight);
@@ -17,11 +17,8 @@ public:
 	Matrix4x4 getView();
 	Matrix4x4 getProj();
 
-
 private:
-	Matrix4x4 m_view;
 	Matrix4x4 m_proj;
-
 	Matrix4x4 m_inversedView;
 
 	const int& ref_windowWidth;

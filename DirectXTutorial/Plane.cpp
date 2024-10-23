@@ -36,8 +36,3 @@ Plane::Plane(Vector3D color)
 	};
 }
 
-
-Plane::~Plane()
-{
-	release();
-}

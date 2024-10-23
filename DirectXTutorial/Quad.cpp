@@ -17,9 +17,3 @@ Quad::Quad() : Primitive()
 		2, 3, 0
 	};
 }
-
-
-Quad::~Quad()
-{
-	release();
-}

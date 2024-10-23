@@ -10,15 +10,15 @@ public:
 	~Transformation();
 
 	void update() override;
-	void updateFisrtPersonRotations();
 
-	void move(Vector3D deltaPos);
-	void scale(Vector3D deltaScale);
-	void rotate(Vector3D deltaRot);
+	void move(const Vector3D deltaPos);
+	void scale(const Vector3D deltaScale);
+	void rotate(const Vector3D deltaRot);
 
-	void setPosition(Vector3D position);
-	void setScale(Vector3D scale);
-	void setRotation(Vector3D rotation);
+	void setPosition(const Vector3D position);
+	void setScale(const Vector3D scale);
+	void setRotation(const Vector3D rotation);
+	void setWorldMatrix(const Matrix4x4 matrix);
 
 	const Vector3D getPosition();
 	const Vector3D getScale();

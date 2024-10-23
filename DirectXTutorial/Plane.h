@@ -6,6 +6,5 @@ class Plane :
 public:
     Plane();
     Plane(Vector3D color);
-    ~Plane();
 };
 

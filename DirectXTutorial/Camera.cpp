@@ -5,10 +5,10 @@
 
 #include "Debugger.h"
 
-Camera::Camera(const int& refWindowWidth, const int& refWindowHeight) : ref_windowWidth(refWindowWidth), ref_windowHeight(refWindowHeight)
+Camera::Camera(const int& refWindowWidth, const int& refWindowHeight) : SceneObject(), 
+	ref_windowWidth(refWindowWidth), ref_windowHeight(refWindowHeight)
 {
-	m_view.setIdentity();
-	m_view.setTranslation(Vector3D(0, 2, -2));
+	getTransform()->setPosition(Vector3D(0, 2, -2));
 
 	setActive(true);
 	Debugger::Success("[Camera] Instantiated");
@@ -30,6 +30,9 @@ void Camera::setActive(bool active)
 
 void Camera::update()
 {
+	/* IMPORTANT THIS DOESN'T OVERIDE SCENE OBJECT COMPONENT UPDATES AS OF NOW. SINCE UPDATE IS STILL ON PRIMITIVES AS OF NOW...
+	*/
+
 	// [1] VIEW MATRIX
 	Matrix4x4 temp;
 	Matrix4x4 world_cam;
@@ -47,14 +50,15 @@ void Camera::update()
 	world_cam *= temp;
 
 	// WASD MOVE CAMERA
-	Vector3D new_pos = m_view.getTranslation() + world_cam.getZDirection() * (m_forward * 0.1f);
+	Vector3D new_pos = getTransform()->getPosition() + world_cam.getZDirection() * (m_forward * 0.1f);
 	new_pos = new_pos + world_cam.getXDirection() * (m_rightward * 0.1f);
 	new_pos.y += (m_upward * 0.1f);
 
 	world_cam.setTranslation(new_pos);
 
-	m_view = world_cam;
-	m_inversedView = m_view;
+	
+	getTransform()->setWorldMatrix(world_cam);
+	m_inversedView = world_cam;
 	m_inversedView.inverse();
 
 
@@ -102,6 +106,8 @@ void Camera::onKeyDown(int key)
 		m_upward = -1;
 		break;
 	}
+
+	this->update();
 }
 
 void Camera::onKeyUp(int key)
@@ -114,6 +120,8 @@ void Camera::onKeyUp(int key)
 		case 'P':
 			m_IsOrthographic = !m_IsOrthographic;
 	}
+
+	this->update();
 }
 
 void Camera::onMouseMove(const Point& mouse_pos)
@@ -121,6 +129,8 @@ void Camera::onMouseMove(const Point& mouse_pos)
 	double deltaTime = EngineTime::getDeltaTime();
 	m_rotX += (mouse_pos.y - (ref_windowHeight/ 2.0f)) * deltaTime * 0.1f;
 	m_rotY += (mouse_pos.x - (ref_windowWidth / 2.0f)) * deltaTime * 0.1f;
+
+	this->update();
 }
 
 void Camera::onLeftMouseDown(const Point& mouse_pos){}

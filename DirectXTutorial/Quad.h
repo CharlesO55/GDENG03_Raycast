@@ -5,5 +5,4 @@ class Quad : public Primitive
 {
 public:
 	Quad();
-	~Quad();
 };

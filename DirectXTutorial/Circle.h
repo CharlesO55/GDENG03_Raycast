@@ -4,7 +4,6 @@ class Circle : public Primitive
 {
 public:
 	Circle();
-	~Circle();
 
 	virtual void update() override;
 

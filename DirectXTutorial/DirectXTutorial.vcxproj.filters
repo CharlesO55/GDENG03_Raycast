@@ -165,6 +165,9 @@
     <ClCompile Include="CameraSystem.cpp">
       <Filter>GameEngine\CameraSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>GameEngine\GameObjects\Shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -286,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="CameraSystem.h">
       <Filter>GameEngine\CameraSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>GameEngine\GameObjects\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

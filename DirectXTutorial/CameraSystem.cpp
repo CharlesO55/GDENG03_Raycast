@@ -17,11 +17,6 @@ void CameraSystem::createCamera(const int& m_windowWidth, const int& m_windowHei
 	Instance->m_Camera = new Camera(m_windowWidth, m_windowHeight);
 }
 
-void CameraSystem::update()
-{
-	Instance->m_Camera->update();
-}
-
 void CameraSystem::release()
 {
 	delete Instance->m_Camera;
