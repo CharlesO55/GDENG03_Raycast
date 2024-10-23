@@ -39,10 +39,15 @@ void AppWindow::onCreate()
 	// CREATE A PLANE
 	Primitive* plane = new Plane(Vector3D(96/256.f, 125 / 256.f, 141 / 256.f));
 	plane->initialize();
-	plane->getTransform()->scale(Vector3D(20));
+	plane->getTransform()->scale(Vector3D(5));
 
 	m_shapes.push_back(plane);
 
+	Primitive* cube = new Cube();
+	cube->initialize();
+	cube->getTransform()->setPosition(Vector3D(5, 0, 5));
+
+	m_shapes.push_back(cube);
 
 
 	
@@ -72,11 +77,13 @@ void AppWindow::onUpdate()
 		m_shapes[i]->draw();
 	}
 
-	if (m_shapes.size() > 2) {
+	/*if (m_shapes.size() > 2) {
 		Debugger::PrintVector(m_shapes[2]->getTransform()->getRotation());
 		Debugger::PrintVector(m_shapes[2]->getTransform()->getWorldMatrix().getEulerAngles());
 
-	}
+		m_shapes[0]->getTransform()->setRotation(m_shapes[2]->getTransform()->getWorldMatrix().getEulerAngles());
+		Debugger::Success("");
+	}*/
 
 	//testUpdate();
 	//testDraw();
@@ -110,16 +117,24 @@ void AppWindow::InstantiateShape()
 	m_shapes.push_back(newShape);
 }
 
-#pragma region PARDCODE17_Test_Textures
 
-
-void AppWindow::DrawRaycastLine()
+void AppWindow::AddRaycastLine()
 {
+	float raycastLength = 10;
+	Vector3D origin = CameraSystem::getCamera()->getTransform()->getPosition();
+	Vector3D dir = CameraSystem::getCamera()->getTransform()->getWorldMatrix().getZDirection();
+	Vector3D endPos = origin + dir * raycastLength;
+
+	
 	// CREATE A LINE
-	Line* line = new Line(Vector3D(0), CameraSystem::getCamera()->getTransform()->getPosition());
+	Line* line = new Line(origin, endPos);
 	line->initialize();
 	m_shapes.push_back(line);
 }
+#pragma region PARDCODE17_Test_Textures
+
+
+
 
 void AppWindow::testCreate()
 {
@@ -319,7 +334,7 @@ void AppWindow::onKeyUp(int key){
 	switch (key) {
 	//TAB
 	case 9:
-		this->DrawRaycastLine();
+		this->AddRaycastLine();
 		break;
 	}
 }

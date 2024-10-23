@@ -18,6 +18,6 @@ public:
 	}
 
 	static void PrintVector(const Vector3D vec) {
-		printf("(%.2f, %.2f, %.2f)\n", vec.x, vec.y, vec.z);
+		printf("(%.2f, %.2f, %.2f)", vec.x, vec.y, vec.z);
 	}
 };

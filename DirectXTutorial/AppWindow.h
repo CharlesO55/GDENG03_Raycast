@@ -31,7 +31,7 @@ public:
 private:
 	std::vector<Primitive*> m_shapes = {};
 
-	void DrawRaycastLine();
+	void AddRaycastLine();
 
 	// TESTING
 	TexturePtr m_wood_tex = nullptr;

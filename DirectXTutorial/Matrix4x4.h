@@ -144,7 +144,7 @@ public:
 		m_mat[3][2] = (-znear * zfar) / (zfar - znear);
 	}
 
-	const Vector3D getZDirection()
+	const Vector3D getZDirection() const
 	{
 		return Vector3D(m_mat[2][0], m_mat[2][1], m_mat[2][2]);
 	}
@@ -162,13 +162,13 @@ public:
 		Vector3D euler;
 
 		// Yaw (Z-axis rotation)
-		euler.z = atan2(m_mat[1][0], m_mat[0][0]);
+		euler.z = -atan2(m_mat[1][0], m_mat[0][0]);
 
 		// Pitch (Y-axis rotation)
-		euler.y = -asin(m_mat[2][0]);
+		euler.y = asin(m_mat[2][0]);
 
 		// Roll (X-axis rotation)
-		euler.x = atan2(m_mat[2][1], m_mat[2][2]);
+		euler.x = -atan2(m_mat[2][1], m_mat[2][2]);
 
 		return euler;
 	}
