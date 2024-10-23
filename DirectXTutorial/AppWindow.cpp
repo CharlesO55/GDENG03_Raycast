@@ -24,7 +24,7 @@ void AppWindow::onCreate()
 
 	// INPUT SYSTEM
 	InputSystem::get()->addListener(this);
-	InputSystem::get()->showCursor(false);
+	InputSystem::get()->showCursor(true);
 
 	// GRAPHICS ENGINE
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, m_windowWidth, m_windowHeight);
@@ -121,16 +121,48 @@ void AppWindow::InstantiateShape()
 void AppWindow::AddRaycastLine()
 {
 	float raycastLength = 10;
+
+	Point cursorPos = InputSystem::get()->getCursorPos();
+
 	Vector3D origin = CameraSystem::getCamera()->getTransform()->getPosition();
-	Vector3D dir = CameraSystem::getCamera()->getTransform()->getWorldMatrix().getZDirection();
+	Vector3D dir = this->GetRayDirection(cursorPos.x, cursorPos.y);
 	Vector3D endPos = origin + dir * raycastLength;
 
-	
 	// CREATE A LINE
 	Line* line = new Line(origin, endPos);
 	line->initialize();
 	m_shapes.push_back(line);
 }
+
+Vector3D AppWindow::GetRayDirection(int mouseX, int mouseY)
+{
+	Matrix4x4 view = CameraSystem::getCamera()->getView();
+	Matrix4x4 projection = CameraSystem::getCamera()->getProj();
+
+	// Convert to normalized device coordinates
+	float x = ((2.0f * mouseX) / m_windowWidth) - 1.0f;
+	float y = 1.0f - ((2.0f * mouseY) / m_windowHeight);
+
+	Vector4D rayClip = Vector4D(x, y, -1.0f, 1.0f);
+
+	// Convert to view space
+	Matrix4x4 invProjection = projection;
+	invProjection.inverse();
+	Vector4D rayEye = invProjection * rayClip;
+	rayEye.z = 1.0f;
+	rayEye.w = 0.0f;
+
+	// Convert to world space
+	Matrix4x4 invView = view;
+	view.inverse();
+	Vector4D rayWorld = invView * rayEye;
+	Vector3D rayWorldDir = Vector3D(rayWorld.x, rayWorld.y, rayWorld.z);
+	rayWorldDir.normalize();
+
+	return rayWorldDir;
+}
+
+
 #pragma region PARDCODE17_Test_Textures
 
 
@@ -341,10 +373,10 @@ void AppWindow::onKeyUp(int key){
 
 void AppWindow::onMouseMove(const Point& mouse_pos)
 {
-	InputSystem::get()->setCursorPosition(Point((m_windowWidth / 2), (m_windowHeight / 2)));
+	//InputSystem::get()->setCursorPosition(Point((m_windowWidth / 2), (m_windowHeight / 2)));
 }
 
-void AppWindow::onLeftMouseDown(const Point& mouse_pos){}
+void AppWindow::onLeftMouseDown(const Point& mouse_pos) { this->AddRaycastLine(); }
 void AppWindow::onLeftMouseUp(const Point& mouse_pos){}
 void AppWindow::onRightMouseDown(const Point& mouse_pos){}
 void AppWindow::onRightMouseUp(const Point& mouse_pos){}

@@ -126,11 +126,11 @@ void Camera::onKeyUp(int key)
 
 void Camera::onMouseMove(const Point& mouse_pos)
 {
-	double deltaTime = EngineTime::getDeltaTime();
-	m_rotX += (mouse_pos.y - (ref_windowHeight/ 2.0f)) * deltaTime * 0.1f;
-	m_rotY += (mouse_pos.x - (ref_windowWidth / 2.0f)) * deltaTime * 0.1f;
+	//double deltaTime = EngineTime::getDeltaTime();
+	//m_rotX += (mouse_pos.y - (ref_windowHeight/ 2.0f)) * deltaTime * 0.1f;
+	//m_rotY += (mouse_pos.x - (ref_windowWidth / 2.0f)) * deltaTime * 0.1f;
 
-	this->update();
+	//this->update();
 }
 
 void Camera::onLeftMouseDown(const Point& mouse_pos){}

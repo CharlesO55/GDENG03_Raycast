@@ -37,7 +37,7 @@ void InputSystem::update()
 		}
 	}
 	m_old_mouse_pos = Point(current_mouse_pos.x, current_mouse_pos.y);
-
+	this->m_cursor_pos = m_old_mouse_pos;
 
 
 	if (::GetKeyboardState(m_keys_state))
@@ -100,6 +100,11 @@ void InputSystem::addListener(InputListener* listener)
 void InputSystem::removeListener(InputListener* listener)
 {
 	m_set_listeners.erase(listener);
+}
+
+Point InputSystem::getCursorPos()
+{
+	return this->m_cursor_pos;
 }
 
 void InputSystem::setCursorPosition(const Point& pos)

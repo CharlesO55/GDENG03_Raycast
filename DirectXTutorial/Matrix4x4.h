@@ -103,6 +103,30 @@ public:
 		this->setMatrix(out);
 	}
 
+	// Vector3D multiplication
+	Vector3D operator*(const Vector3D& vec) const 
+	{
+		Vector4D vec4(vec.x, vec.y, vec.z, 1.0f);
+
+		Vector4D out;
+		out.x = m_mat[0][0] * vec4.x + m_mat[0][1] * vec4.y + m_mat[0][2] * vec4.z + m_mat[0][3] * vec4.w;
+		out.y = m_mat[1][0] * vec4.x + m_mat[1][1] * vec4.y + m_mat[1][2] * vec4.z + m_mat[1][3] * vec4.w;
+		out.z = m_mat[2][0] * vec4.x + m_mat[2][1] * vec4.y + m_mat[2][2] * vec4.z + m_mat[2][3] * vec4.w;
+		out.w = m_mat[3][0] * vec4.x + m_mat[3][1] * vec4.y + m_mat[3][2] * vec4.z + m_mat[3][3] * vec4.w;
+
+		return Vector3D(out.x, out.y, out.z);
+	}
+
+	// Vector4D multiplication
+	Vector4D operator *(const Vector4D& vector) const
+	{
+		Vector4D result;
+		result.x = m_mat[0][0] * vector.x + m_mat[0][1] * vector.y + m_mat[0][2] * vector.z + m_mat[0][3] * vector.w;
+		result.y = m_mat[1][0] * vector.x + m_mat[1][1] * vector.y + m_mat[1][2] * vector.z + m_mat[1][3] * vector.w;
+		result.z = m_mat[2][0] * vector.x + m_mat[2][1] * vector.y + m_mat[2][2] * vector.z + m_mat[2][3] * vector.w;
+		result.w = m_mat[3][0] * vector.x + m_mat[3][1] * vector.y + m_mat[3][2] * vector.z + m_mat[3][3] * vector.w;
+		return result;
+	}
 
 	void operator *=(const Matrix4x4& matrix)
 	{

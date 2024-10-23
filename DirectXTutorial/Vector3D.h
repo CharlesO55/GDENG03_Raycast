@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 class Vector3D {
 public:
@@ -22,10 +23,24 @@ public:
 		return Vector3D(x * num, y * num, z * num);
 	}
 
-
 	Vector3D operator +(const Vector3D& vec) const
 	{
 		return Vector3D(x + vec.x, y + vec.y, z + vec.z);
+	}
+
+	float magnitude() const 
+	{
+		return std::sqrt(x * x + y * y + z * z);
+	}
+
+	void normalize() 
+	{
+		float len = magnitude();
+		if (len > 0.00001f) {
+			x /= len;
+			y /= len;
+			z /= len;
+		}
 	}
 
 	static Vector3D RIGHT() { return Vector3D(1, 0, 0); }

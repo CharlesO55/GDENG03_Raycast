@@ -32,6 +32,7 @@ private:
 	std::vector<Primitive*> m_shapes = {};
 
 	void AddRaycastLine();
+	Vector3D GetRayDirection(int mouseX, int mouseY);
 
 	// TESTING
 	TexturePtr m_wood_tex = nullptr;
