@@ -13,7 +13,7 @@
 #include "Line.h"
 
 #include "Debugger.h"
-
+#include <iostream>
 
 AppWindow::AppWindow(){}
 AppWindow::~AppWindow(){}
@@ -24,7 +24,6 @@ void AppWindow::onCreate()
 
 	// INPUT SYSTEM
 	InputSystem::get()->addListener(this);
-	InputSystem::get()->showCursor(true);
 
 	// GRAPHICS ENGINE
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, m_windowWidth, m_windowHeight);
@@ -77,14 +76,6 @@ void AppWindow::onUpdate()
 		m_shapes[i]->draw();
 	}
 
-	/*if (m_shapes.size() > 2) {
-		Debugger::PrintVector(m_shapes[2]->getTransform()->getRotation());
-		Debugger::PrintVector(m_shapes[2]->getTransform()->getWorldMatrix().getEulerAngles());
-
-		m_shapes[0]->getTransform()->setRotation(m_shapes[2]->getTransform()->getWorldMatrix().getEulerAngles());
-		Debugger::Success("");
-	}*/
-
 	//testUpdate();
 	//testDraw();
 
@@ -128,8 +119,18 @@ void AppWindow::AddRaycastLine()
 	Vector3D dir = this->GetRayDirection(cursorPos.x, cursorPos.y);
 	Vector3D endPos = origin + dir * raycastLength;
 
+	/*
+	//(direction^2)t^2 + 2(direction*origin) + (origin^2 - r^2)
+	float a = Vector3D::dot(dir, dir);
+	float b = 2 * Vector3D::dot(dir, origin);
+	float c = Vector3D::dot(origin, origin) - raycastLength * raycastLength;
+
+	float discriminant = b * b - 4.f * a * c;
+	std::cout << discriminant << std::endl;
+	*/
+	
 	// CREATE A LINE
-	Line* line = new Line(origin, endPos);
+	Line* line = new Line(origin , endPos);
 	line->initialize();
 	m_shapes.push_back(line);
 }
@@ -371,12 +372,8 @@ void AppWindow::onKeyUp(int key){
 	}
 }
 
-void AppWindow::onMouseMove(const Point& mouse_pos)
-{
-	//InputSystem::get()->setCursorPosition(Point((m_windowWidth / 2), (m_windowHeight / 2)));
-}
-
-void AppWindow::onLeftMouseDown(const Point& mouse_pos) { this->AddRaycastLine(); }
+void AppWindow::onMouseMove(const Point& mouse_pos) {}
+void AppWindow::onLeftMouseDown(const Point& mouse_pos) { this->AddRaycastLine();}
 void AppWindow::onLeftMouseUp(const Point& mouse_pos){}
 void AppWindow::onRightMouseDown(const Point& mouse_pos){}
 void AppWindow::onRightMouseUp(const Point& mouse_pos){}

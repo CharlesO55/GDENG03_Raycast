@@ -24,6 +24,7 @@ private:
 	const int& ref_windowWidth;
 	const int& ref_windowHeight;
 	
+	bool m_IsFreeLookMode = false;
 
 	//DIRECTIONAL MOVEMENT
 	int m_rightward = 0;

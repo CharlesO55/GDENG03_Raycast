@@ -18,6 +18,10 @@ public:
 		return v;
 	}
 
+	static float dot(const Vector3D a, const Vector3D b) {
+		return a.x * b.x +		a.y + b.y +		a.z + b.z;
+	}
+
 	Vector3D operator *(const float num) const
 	{
 		return Vector3D(x * num, y * num, z * num);

@@ -126,14 +126,29 @@ void Camera::onKeyUp(int key)
 
 void Camera::onMouseMove(const Point& mouse_pos)
 {
-	//double deltaTime = EngineTime::getDeltaTime();
-	//m_rotX += (mouse_pos.y - (ref_windowHeight/ 2.0f)) * deltaTime * 0.1f;
-	//m_rotY += (mouse_pos.x - (ref_windowWidth / 2.0f)) * deltaTime * 0.1f;
+	if (!m_IsFreeLookMode)
+		return;
 
-	//this->update();
+	double deltaTime = EngineTime::getDeltaTime();
+	
+	float halfHeight = ref_windowHeight / 2.0f;
+	float halfWidth = ref_windowWidth / 2.0f;
+
+	//Rotations
+	m_rotX += (mouse_pos.y - halfHeight) * deltaTime * 0.1f;
+	m_rotY += (mouse_pos.x - halfWidth) * deltaTime * 0.1f;
+
+	//Update matrix
+	this->update();
+
+	//Center mouse
+	InputSystem::get()->setCursorPosition(Point(halfWidth, halfHeight));
 }
 
 void Camera::onLeftMouseDown(const Point& mouse_pos){}
 void Camera::onLeftMouseUp(const Point& mouse_pos) {}
-void Camera::onRightMouseDown(const Point& mouse_pos) {}
+void Camera::onRightMouseDown(const Point& mouse_pos) {
+	m_IsFreeLookMode = !m_IsFreeLookMode;
+	InputSystem::get()->showCursor(!m_IsFreeLookMode);
+}
 void Camera::onRightMouseUp(const Point& mouse_pos) {}
