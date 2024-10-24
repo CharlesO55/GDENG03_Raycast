@@ -30,9 +30,13 @@ public:
 
 private:
 	std::vector<Primitive*> m_shapes = {};
+	std::vector<Primitive*> m_rays = {};
+
 
 	void AddRaycastLine();
 	Vector3D GetRayDirection(int mouseX, int mouseY);
+	UINT16 HitDetect(const Vector3D& rayOrigin, const Vector3D& rayDir, const Vector3D& targetCenter, Vector3D* nearHit, Vector3D* penetrateHit);
+
 
 	// TESTING
 	TexturePtr m_wood_tex = nullptr;
@@ -49,7 +53,7 @@ private:
 
 
 private:
-	void InstantiateShape();
+	void InstantiateShape(const Vector3D& spawnPos);
 
 	// Inherited via InputListener
 	virtual void onKeyDown(int key) override;

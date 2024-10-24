@@ -5,10 +5,7 @@ class CameraSystem
 {
 private:
 	Camera* m_Camera;
-
 	static CameraSystem* Instance;
-
-
 
 public:
 	static void init();

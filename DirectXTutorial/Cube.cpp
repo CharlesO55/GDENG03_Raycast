@@ -6,11 +6,12 @@
 #include "RotatorScript.h"
 #include "ScaleScript.h"
 
+#include "RaycastComponent.h"
 
 Cube::Cube() : Primitive()
 {
 	m_Components.push_back(new RotatorScript(this));
-	//m_Components.push_back(new ScaleScript(this));
+	m_Components.push_back(new RaycastComponent(this));
 
 
 	m_verts =

@@ -12,8 +12,11 @@
 #include "Plane.h"
 #include "Line.h"
 
+#include "RaycastComponent.h"
+
 #include "Debugger.h"
 #include <iostream>
+
 
 AppWindow::AppWindow(){}
 AppWindow::~AppWindow(){}
@@ -75,6 +78,11 @@ void AppWindow::onUpdate()
 		m_shapes[i]->updateMVP();
 		m_shapes[i]->draw();
 	}
+	for (int i = 0; i < m_rays.size(); i++) {
+		m_rays[i]->update();
+		m_rays[i]->updateMVP();
+		m_rays[i]->draw();
+	}
 
 	//testUpdate();
 	//testDraw();
@@ -90,22 +98,24 @@ void AppWindow::onDestroy()
 		delete m_shapes.back();
 		m_shapes.pop_back();
 	}
+	while (m_rays.size() > 0) {
+		delete m_rays.back();
+		m_rays.pop_back();
+	}
+
 
 	CameraSystem::release();
 }
 
 
-void AppWindow::InstantiateShape()
+void AppWindow::InstantiateShape(const Vector3D& spawnPos)
 {
 	Primitive* newShape = new Cube();
 	newShape->initialize();
-	newShape->getTransform()->move(Vector3D(
-		std::rand() % 10 + -5,
-		std::rand() % 10 + -5,
-		std::rand() % 10 + -5
-	));
+	newShape->getTransform()->setPosition(spawnPos);
+	newShape->getTransform()->setScale(Vector3D(0.1f));
 
-	m_shapes.push_back(newShape);
+	m_rays.push_back(newShape);
 }
 
 
@@ -119,20 +129,29 @@ void AppWindow::AddRaycastLine()
 	Vector3D dir = this->GetRayDirection(cursorPos.x, cursorPos.y);
 	Vector3D endPos = origin + dir * raycastLength;
 
-	/*
-	//(direction^2)t^2 + 2(direction*origin) + (origin^2 - r^2)
-	float a = Vector3D::dot(dir, dir);
-	float b = 2 * Vector3D::dot(dir, origin);
-	float c = Vector3D::dot(origin, origin) - raycastLength * raycastLength;
+	Vector3D nearHit, farHit;
 
-	float discriminant = b * b - 4.f * a * c;
-	std::cout << discriminant << std::endl;
-	*/
+	for (int i = 0; i < m_shapes.size(); i++) {
+		UINT16 hits = HitDetect(origin, dir, m_shapes[i]->getTransform()->getPosition(), &nearHit, &farHit);
+
+		if (hits > 0) {
+			InstantiateShape(nearHit);
+			InstantiateShape(farHit);
+
+			//[ISSUE] Doesn't return a proper pointer. Can't access variables
+			Component* raycastComponent = nullptr;
+			if (m_shapes[i]->tryGetComponent(ComponentID::RAYCAST, raycastComponent)) {
+				((RaycastComponent*)raycastComponent)->onHit(dir);
+			}
+			std::cout << "\n" << hits; Debugger::PrintVector(nearHit); Debugger::PrintVector(farHit);
+		}
+	}
 	
+
 	// CREATE A LINE
 	Line* line = new Line(origin , endPos);
 	line->initialize();
-	m_shapes.push_back(line);
+	m_rays.push_back(line);
 }
 
 Vector3D AppWindow::GetRayDirection(int mouseX, int mouseY)
@@ -161,6 +180,69 @@ Vector3D AppWindow::GetRayDirection(int mouseX, int mouseY)
 	rayWorldDir.normalize();
 
 	return rayWorldDir;
+}
+
+UINT16 AppWindow::HitDetect(const Vector3D& rayOrigin, const Vector3D& rayDir, const Vector3D& targetCenter, Vector3D* nearHit, Vector3D* penetrateHit)
+{
+	float sphereRadius = 1;
+
+	Vector3D oc = rayOrigin - targetCenter;
+
+	//(direction^2)t^2 + 2(direction*origin) + (origin^2 - r^2)
+	float a = Vector3D::dot(rayDir, rayDir);
+	float b = Vector3D::dot(oc, rayDir) * 2.0f;
+	float c = Vector3D::dot(oc, oc) - (sphereRadius * sphereRadius);
+
+	//b^2 - 4ac
+	float discriminant = b * b - (4 * a * c);
+
+	//SINGLE HIT
+	if (discriminant == 0.f) {
+		float t = (sqrt(discriminant) - b) / (2 * a);
+		//DO NOT REGISTER HITS BEHIND THE ORIGIN
+		if (t >= 0.f) {
+			*nearHit = rayOrigin + rayDir * t;
+			return 1;
+		}
+	}
+	//2 HITS
+	else if (discriminant > 0.f)
+	{
+		UINT16 hits = 0;
+		float t = (sqrt(discriminant) - b) / (2 * a);
+		float t1 = (-sqrt(discriminant) - b) / (2 * a);
+
+		bool nearHitDetermined = false;
+		//DETERMINE THE HIT POSITIONS IF t ARE VALID
+		if (t >= 0.f) {
+			//DETERMINE THE CLOSER HIT
+			if (t1 >= 0.f) {
+				if (t <= t1) {
+					nearHitDetermined = true;
+					*nearHit = rayOrigin + rayDir * t;
+				}
+				else
+					*penetrateHit = rayOrigin + rayDir * t;
+			}
+			else {
+				nearHitDetermined = true;
+				*nearHit = rayOrigin + rayDir * t;
+			}
+			hits++;
+		}
+		//IF ALSO VALID, DETERMINE IF HIT IS CLOSER
+		if (t1 >= 0.f) {
+			if (!nearHitDetermined)
+				*nearHit = rayOrigin + rayDir * t1;
+			else
+				*penetrateHit = rayOrigin + rayDir * t1;
+			hits++;
+		}
+
+		return hits;
+	}
+	//NO HITS
+	return 0;
 }
 
 
@@ -344,20 +426,20 @@ void AppWindow::onKeyDown(int key)
 		break;
 	//SPACE
 	case 32:
-		InstantiateShape();
+		//InstantiateShape();
 		break;
 	//BACKSPACE
 	case 8:
-		if (m_shapes.size() > 0) {
-			delete m_shapes.back();
-			m_shapes.pop_back();
+		if (m_rays.size() > 0) {
+			delete m_rays.back();
+			m_rays.pop_back();
 		}
 		break;
 	//DELETE
 	case 46:
-		while (m_shapes.size() > 0) {
-			delete m_shapes.back();
-			m_shapes.pop_back();
+		while (m_rays.size() > 0) {
+			delete m_rays.back();
+			m_rays.pop_back();
 		}
 		break;
 	}

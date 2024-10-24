@@ -50,11 +50,10 @@ void Camera::update()
 	world_cam *= temp;
 
 	// WASD MOVE CAMERA
-	Vector3D new_pos = getTransform()->getPosition() + world_cam.getZDirection() * (m_forward * 0.1f);
-	new_pos = new_pos + world_cam.getXDirection() * (m_rightward * 0.1f);
-	new_pos.y += (m_upward * 0.1f);
-
-	world_cam.setTranslation(new_pos);
+	Vector3D dir = world_cam.getZDirection() * m_forward + world_cam.getXDirection() * m_rightward + Vector3D(0, m_upward, 0);
+	dir.normalize();
+	
+	world_cam.setTranslation(getTransform()->getPosition() + (dir * EngineTime::getDeltaTime() * 2));
 
 	
 	getTransform()->setWorldMatrix(world_cam);

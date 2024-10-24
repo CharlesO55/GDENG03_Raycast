@@ -14,11 +14,10 @@ public:
 
 	void setChild(SceneObject* child);
 
-	Component* getComponent(ComponentID ID);
+	bool tryGetComponent(ComponentID ID, Component* result);
 	Transformation* getTransform();
 
 protected:
 	SceneObject* m_child = nullptr;
-
 	std::vector<Component*> m_Components = {};
 };

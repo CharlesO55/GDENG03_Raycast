@@ -73,6 +73,9 @@
     <Filter Include="GameEngine\CameraSystem">
       <UniqueIdentifier>{7d601f7f-9dde-4277-9e8f-38da623dea73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\RaycastSystem">
+      <UniqueIdentifier>{c184e149-c2cd-466f-8a15-54fa657ab37c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -167,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="Line.cpp">
       <Filter>GameEngine\GameObjects\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="RaycastComponent.cpp">
+      <Filter>GameEngine\RaycastSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="Line.h">
       <Filter>GameEngine\GameObjects\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="RaycastComponent.h">
+      <Filter>GameEngine\RaycastSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

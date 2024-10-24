@@ -13,5 +13,5 @@ public:
 	virtual void update() = 0;
 
 protected:
-	SceneObject* m_Owner;
+	SceneObject* m_Owner = nullptr;
 };

@@ -19,18 +19,13 @@ public:
 	}
 
 	static float dot(const Vector3D a, const Vector3D b) {
-		return a.x * b.x +		a.y + b.y +		a.z + b.z;
+		return a.x * b.x + a.y * b.y + a.z * b.z;
 	}
 
-	Vector3D operator *(const float num) const
-	{
-		return Vector3D(x * num, y * num, z * num);
-	}
+	Vector3D operator *(const float num) const { return Vector3D(x * num, y * num, z * num); }
 
-	Vector3D operator +(const Vector3D& vec) const
-	{
-		return Vector3D(x + vec.x, y + vec.y, z + vec.z);
-	}
+	Vector3D operator +(const Vector3D& vec) const { return Vector3D(x + vec.x, y + vec.y, z + vec.z); }
+	Vector3D operator -(const Vector3D& vec) const { return Vector3D(x - vec.x, y - vec.y, z - vec.z); }
 
 	float magnitude() const 
 	{
@@ -45,6 +40,14 @@ public:
 			y /= len;
 			z /= len;
 		}
+	}
+
+	static float distance(const Vector3D& a, const Vector3D& b) {
+		float x = a.x - b.x;
+		float y = a.y - b.y;
+		float z = a.z - b.z;
+
+		return sqrt(x*x + y*y + z*z);
 	}
 
 	static Vector3D RIGHT() { return Vector3D(1, 0, 0); }

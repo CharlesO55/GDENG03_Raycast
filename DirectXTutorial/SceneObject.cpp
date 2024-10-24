@@ -17,14 +17,16 @@ void SceneObject::setChild(SceneObject* child)
 }
 
 
-Component* SceneObject::getComponent(ComponentID ID)
+bool SceneObject::tryGetComponent(ComponentID ID, Component* result)
 {
 	for (int i = 0; i < m_Components.size(); i++) {
-		if (m_Components[i]->id == ID)
-			return m_Components[i];
+		if (m_Components[i]->id == ID) {
+			result = m_Components[i];
+			return true;
+		}
 	}
 
-	return nullptr;
+	return false;
 }
 
 Transformation* SceneObject::getTransform()
