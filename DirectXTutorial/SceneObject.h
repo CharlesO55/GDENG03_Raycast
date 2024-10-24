@@ -14,7 +14,7 @@ public:
 
 	void setChild(SceneObject* child);
 
-	bool tryGetComponent(ComponentID ID, Component* result);
+	bool tryGetComponent(ComponentID ID, Component*& result);
 	Transformation* getTransform();
 
 protected:

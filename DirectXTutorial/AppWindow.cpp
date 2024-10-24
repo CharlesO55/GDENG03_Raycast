@@ -138,7 +138,6 @@ void AppWindow::AddRaycastLine()
 			InstantiateShape(nearHit);
 			InstantiateShape(farHit);
 
-			//[ISSUE] Doesn't return a proper pointer. Can't access variables
 			Component* raycastComponent = nullptr;
 			if (m_shapes[i]->tryGetComponent(ComponentID::RAYCAST, raycastComponent)) {
 				((RaycastComponent*)raycastComponent)->onHit(dir);

@@ -10,8 +10,6 @@ public:
 	RaycastComponent(SceneObject* owner);
 	
 
-	void update() override;
+	void update() override {};
 	void onHit(const Vector3D& hitDir);
-
-	bool m_IsTriggered = false;
 };
