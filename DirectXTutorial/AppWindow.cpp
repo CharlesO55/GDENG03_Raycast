@@ -135,14 +135,21 @@ void AppWindow::AddRaycastLine()
 		UINT16 hits = HitDetect(origin, dir, m_shapes[i]->getTransform()->getPosition(), &nearHit, &farHit);
 
 		if (hits > 0) {
-			InstantiateShape(nearHit);
-			InstantiateShape(farHit);
+			//InstantiateShape(nearHit);
+			//InstantiateShape(farHit);
 
 			Component* raycastComponent = nullptr;
 			if (m_shapes[i]->tryGetComponent(ComponentID::RAYCAST, raycastComponent)) {
-				((RaycastComponent*)raycastComponent)->onHit(dir);
+				this->m_is_selected = true;
+				this->m_selected_prim = m_shapes[i];
+				//((RaycastComponent*)raycastComponent)->onHit(dir);
 			}
 			std::cout << "\n" << hits; Debugger::PrintVector(nearHit); Debugger::PrintVector(farHit);
+		}
+
+		else {
+			this->m_is_selected = false;
+			this->m_selected_prim = nullptr;
 		}
 	}
 	
@@ -441,7 +448,70 @@ void AppWindow::onKeyDown(int key)
 			m_rays.pop_back();
 		}
 		break;
+
+	// I
+	case 73:
+		if (this->m_is_selected) 
+		{
+			Component* transformComponent = nullptr;
+			if (this->m_selected_prim->tryGetComponent(ComponentID::TRANSFORMATION, transformComponent))
+				((Transformation*)transformComponent)->move(Vector3D(0.0f, 0.1f, 0.0f));	
+		}
+
+		break;
+
+	// J
+	case 74:
+		if (this->m_is_selected)
+		{
+			Component* transformComponent = nullptr;
+			if (this->m_selected_prim->tryGetComponent(ComponentID::TRANSFORMATION, transformComponent))
+				((Transformation*)transformComponent)->move(Vector3D(-0.1f, 0.0f, 0.0f));
+		}
+		break;
+
+	// K
+	case 75:
+		if (this->m_is_selected)
+		{
+			Component* transformComponent = nullptr;
+			if (this->m_selected_prim->tryGetComponent(ComponentID::TRANSFORMATION, transformComponent))
+				((Transformation*)transformComponent)->move(Vector3D(0.0f, -0.1f, 0.0f));
+		}
+		break;
+
+	// L
+	case 76:
+		if (this->m_is_selected)
+		{
+			Component* transformComponent = nullptr;
+			if (this->m_selected_prim->tryGetComponent(ComponentID::TRANSFORMATION, transformComponent))
+				((Transformation*)transformComponent)->move(Vector3D(0.1f, 0.0f, 0.0f));
+		}
+		break;
+
+	// U
+	case 79:
+		if (this->m_is_selected)
+		{
+			Component* transformComponent = nullptr;
+			if (this->m_selected_prim->tryGetComponent(ComponentID::TRANSFORMATION, transformComponent))
+				((Transformation*)transformComponent)->move(Vector3D(0.0f, 0.0f, -0.1f));
+		}
+		break;
+
+
+	// O
+	case 85:
+		if (this->m_is_selected)
+		{
+			Component* transformComponent = nullptr;
+			if (this->m_selected_prim->tryGetComponent(ComponentID::TRANSFORMATION, transformComponent))
+				((Transformation*)transformComponent)->move(Vector3D(0.0f, 0.0f, 0.1f));
+		}
+		break;
 	}
+
 }
 
 void AppWindow::onKeyUp(int key){

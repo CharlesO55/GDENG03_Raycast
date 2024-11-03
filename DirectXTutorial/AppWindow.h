@@ -32,6 +32,8 @@ private:
 	std::vector<Primitive*> m_shapes = {};
 	std::vector<Primitive*> m_rays = {};
 
+	bool m_is_selected = false;
+	Primitive* m_selected_prim = nullptr;
 
 	void AddRaycastLine();
 	Vector3D GetRayDirection(int mouseX, int mouseY);
