@@ -35,9 +35,11 @@ private:
 	bool m_is_selected = false;
 	Primitive* m_selected_prim = nullptr;
 
-	void AddRaycastLine();
+	bool TryRacyastObjects(Vector3D* hitPos, Primitive*& hitObj);
+	void DoRaycast();
+
+
 	Vector3D GetRayDirection(int mouseX, int mouseY);
-	UINT16 HitDetect(const Vector3D& rayOrigin, const Vector3D& rayDir, const Vector3D& targetCenter, Vector3D* nearHit, Vector3D* penetrateHit);
 
 
 	// TESTING

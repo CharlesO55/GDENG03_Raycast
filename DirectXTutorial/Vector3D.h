@@ -18,11 +18,16 @@ public:
 		return v;
 	}
 
-	static float dot(const Vector3D a, const Vector3D b) {
+	static float dot(const Vector3D& a, const Vector3D& b) {
 		return a.x * b.x + a.y * b.y + a.z * b.z;
 	}
 
+	static Vector3D inverse(const Vector3D& vec) {
+		return Vector3D(1 / vec.x, 1 / vec.y, 1 / vec.z);
+	}
+
 	Vector3D operator *(const float num) const { return Vector3D(x * num, y * num, z * num); }
+	Vector3D operator /(const float num) const { return Vector3D(x / num, y / num, z / num); }
 
 	Vector3D operator +(const Vector3D& vec) const { return Vector3D(x + vec.x, y + vec.y, z + vec.z); }
 	Vector3D operator -(const Vector3D& vec) const { return Vector3D(x - vec.x, y - vec.y, z - vec.z); }
@@ -48,6 +53,20 @@ public:
 		float z = a.z - b.z;
 
 		return sqrt(x*x + y*y + z*z);
+	}
+
+	static float maxComponent(const Vector3D& vec) {
+		float output = vec.x;
+		if (vec.y > output)	output = vec.y;
+		if (vec.z > output)	output = vec.z;
+		return output;
+	}
+
+	static float minComponent(const Vector3D& vec) {
+		float output = vec.x;
+		if (vec.y < output)	output = vec.y;
+		if (vec.z < output)	output = vec.z;
+		return output;
 	}
 
 	static Vector3D RIGHT() { return Vector3D(1, 0, 0); }

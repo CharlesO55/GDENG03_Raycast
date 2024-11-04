@@ -1,5 +1,7 @@
 #include "Plane.h"
 
+#include "RaycastComponent.h"
+
 Plane::Plane() : Primitive()
 {
 	m_verts = {
@@ -20,6 +22,9 @@ Plane::Plane() : Primitive()
 
 Plane::Plane(Vector3D color) : Primitive()
 {
+	m_Components.push_back(new RaycastComponent(this, RaycastComponent::INTERSECTION_TYPE::PLANE_CAST));
+
+
 	m_verts = {
 		{ Vector3D(-1,0,-1), Vector3D(-1,0,-1),   color, color }, //BL
 		{ Vector3D(-1,0,1), Vector3D(-1,0,1),   color, color }, //TL

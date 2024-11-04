@@ -7,9 +7,24 @@
 class RaycastComponent : public Component
 {
 public:
-	RaycastComponent(SceneObject* owner);
+	enum class INTERSECTION_TYPE
+	{
+		SPHERE_CAST,
+		PLANE_CAST
+	};
+	
+	
+	RaycastComponent(SceneObject* owner, INTERSECTION_TYPE type);
 	
 
 	void update() override {};
-	void onHit(const Vector3D& hitDir);
+	
+	virtual void onHit();
+
+	unsigned int checkRaycastHits(const Vector3D& rayOrigin, const Vector3D& rayDir, const Vector3D& targetCenter, const Vector3D& targetNormal, float* t);
+	unsigned int planeCheck(const Vector3D& rayOrigin, const Vector3D& rayDir, const Vector3D& targetCenter, const Vector3D& targetNormal, float* t);
+	unsigned int sphereCheck(const Vector3D& rayOrigin, const Vector3D& rayDir, const Vector3D& targetCenter, float* t);
+
+private:
+	INTERSECTION_TYPE m_IntersectionType;
 };

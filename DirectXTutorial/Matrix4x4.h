@@ -172,11 +172,15 @@ public:
 	{
 		return Vector3D(m_mat[2][0], m_mat[2][1], m_mat[2][2]);
 	}
-	const Vector3D getXDirection()
+	const Vector3D getYDirection() const
+	{
+		return Vector3D(m_mat[1][0], m_mat[1][1], m_mat[1][2]);
+	}
+	const Vector3D getXDirection() const
 	{
 		return Vector3D(m_mat[0][0], m_mat[0][1], m_mat[0][2]);
 	}
-	const Vector3D getTranslation()
+	const Vector3D getTranslation() const
 	{
 		return Vector3D(m_mat[3][0], m_mat[3][1], m_mat[3][2]);
 	}
